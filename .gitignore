@@ -1,4 +1,5 @@
 .idea
 env
 img
-../instance
+instance
+main/__pycache__
