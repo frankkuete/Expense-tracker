@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en"><head>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.output.css') }}" />
+
+        {% if title %}
+            <title>Expense Tracker - {{ title }}</title>
+        {% else %}
+            <title>Expense Tracker : Keep an eye on your expenses</title>
+        {% endif %}
+    </head>
+</head>
+<body>
+    <!-- Optional JavaScript -->
+    <!-- Additional JS Librairies -->
+    <!--<script src="https://cdn.tailwindcss.com"></script>-->
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"  defer></script>
+    <script src="{{ url_for('static', filename='js/init-alpine.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% block content %}{% endblock %}
+
+</body>
+</html>
