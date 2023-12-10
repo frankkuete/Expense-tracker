@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base-login.html" %}
 {% block content %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -30,7 +30,7 @@
             <img
               aria-hidden="true"
               class="hidden object-cover w-full h-full dark:block"
-              src="../assets/img/login-office-dark.jpeg"
+              src="{{ url_for('static', filename='img/login-office-dark.jpeg') }}"
               alt="Office"
             />
           </div>
