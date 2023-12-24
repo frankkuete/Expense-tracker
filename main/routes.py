@@ -1,10 +1,19 @@
+import os
+import secrets
+import time
+
+from PIL import Image
+
 from flask import render_template, redirect, url_for, flash, request, abort
 from flask_login import current_user, logout_user, login_user, login_required
 
 from main import app, db, bcrypt
-from main.forms import RegistrationForm, LoginForm, CreateAccountForm, CreateIncomeForm
-from main.models import User, Account, Income
+from main.forms import RegistrationForm, LoginForm, CreateAccountForm, CreateIncomeForm, CreateExpenseForm, \
+    CreateDetailForm
+from main.models import User, Account, Income, Expense, Detail, ExpenseDetail
 from babel import numbers
+
+
 
 @app.route("/")
 @app.route("/home")
@@ -18,11 +27,155 @@ def dashboard():
     return render_template('dashboard.html', title="dashboard")
 
 
+@app.route("/expenses")
+@login_required
+def expenses():
+    expenses = Expense.query.filter_by(user_id=current_user.id).all()
+    for expense in expenses:
+        related_account = Account.query.get(expense.account_id)
+        expense.account_id = related_account.category+"-"+related_account.bank+"-"+related_account.iban
+    return render_template('expenses.html', title="expenses", expenses=expenses)
+
+
+@app.route("/expense/new", methods=['GET', 'POST'])
+@login_required
+def new_expense():
+    form = CreateExpenseForm()
+    form.account_id.choices = [(a.id, a.category + "-" + a.bank + "-" + a.iban) for a in Account.query.filter_by(user_id=current_user.id).all()]
+    if form.validate_on_submit():
+        expense = Expense(user_id=current_user.id, account_id=form.account_id.data, expense_date=form.expense_date.data, category=form.category.data,
+                          merchant=form.merchant.data, description=form.description.data, amount=form.amount.data)
+        if form.proof.data:
+            expense.proof = save_picture(form.proof.data, 'expense_pics')
+        account_to_update = Account.query.get_or_404(form.account_id.data)
+        account_to_update.balance = account_to_update.balance - form.amount.data
+        db.session.add(expense)
+        db.session.commit()
+        flash('Your new expense has been created ! ', 'success')
+        return redirect(url_for('expenses'))
+    return render_template('new_expense.html', title="new_expense", form=form)
+
+
+@app.route("/expense/<int:expense_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_expense(expense_id):
+    expense = Expense.query.get_or_404(expense_id)
+    form = CreateExpenseForm()
+    form.account_id.choices = [(a.id, a.category + "-" + a.bank + "-" + a.iban) for a in Account.query.filter_by(user_id=current_user.id).all()]
+    if form.validate_on_submit():
+        expense.merchant = form.merchant.data
+        expense.description = form.description.data
+        expense.expense_date = form.expense_date.data
+        expense.category = form.category.data
+        if form.proof.data:
+            print(form.proof.data)
+            expense.proof = save_picture(form.proof.data, 'expense_pics')
+        if expense.account_id == form.account_id.data:
+            account = Account.query.get_or_404(form.account_id.data)
+            account.balance = account.balance - (form.amount.data - expense.amount)
+
+        else:
+            old_account = Account.query.get_or_404(expense.account_id)
+            new_account = Account.query.get_or_404(form.account_id.data)
+            old_account.balance = old_account.balance + expense.amount
+            new_account.balance = new_account.balance - form.amount.data
+        expense.account_id = form.account_id.data
+        expense.amount = form.amount.data
+        print(form.proof.data)
+        db.session.commit()
+        flash('Your Expense has been updated!', 'success')
+        return redirect(url_for('expenses'))
+    elif request.method == 'GET':
+        form.account_id.default = expense.account_id
+        form.process()
+        form.merchant.data = expense.merchant
+        form.description.data = expense.description
+        form.amount.data = expense.amount
+        form.expense_date.data = expense.expense_date
+        form.category.data = expense.category
+    return render_template('new_expense.html', title='update_expense', form=form, legend='Update Expense')
+
+
+@app.route("/expense/<int:expense_id>/delete", methods=['POST'])
+@login_required
+def delete_expense(expense_id):
+    deleted_expense = Expense.query.get_or_404(expense_id)
+    modified_account = Account.query.get_or_404(deleted_expense.account_id)
+    modified_account.balance = modified_account.balance + deleted_expense.amount
+    for detail in deleted_expense.details:
+        db.session.delete(detail.detail)
+        db.session.delete(detail)
+    db.session.delete(deleted_expense)
+    db.session.commit()
+    flash('Your expense and the related details have been successfully deleted !', 'success')
+    return redirect(url_for('expenses'))
+
+
+@app.route("/expense/<int:expense_id>/new", methods=['GET', 'POST'])
+@login_required
+def new_expense_detail(expense_id):
+    expense = Expense.query.get_or_404(expense_id)
+    form = CreateDetailForm()
+    if form.validate_on_submit():
+        new_detail = Detail(detail_name=form.detail_name.data, detail_quantity=form.detail_quantity.data,
+                            detail_amount=form.detail_amount.data)
+        db.session.add(new_detail)
+        db.session.commit()
+        new_expense_detail = ExpenseDetail(expense_id=expense.id, detail_id=new_detail.id)
+        db.session.add(new_expense_detail)
+        db.session.commit()
+        flash('Your new detail has been created ! ', 'success')
+        return redirect(url_for('expense', expense_id=expense.id))
+    return render_template('new_expense_detail.html', title="new expense detail", expense=expense, form=form)
+
+
+@app.route("/expense/<int:expense_id>/delete/<int:detail_id>", methods=['POST'])
+@login_required
+def delete_expense_detail(expense_id, detail_id):
+    deleted_expense_detail = ExpenseDetail.query.filter_by(expense_id=expense_id,detail_id=detail_id).all()
+    deleted_detail = Detail.query.get_or_404(detail_id)
+    print("delete", deleted_expense_detail,deleted_detail)
+    for ed in deleted_expense_detail:
+        db.session.delete(ed)
+    db.session.delete(deleted_detail)
+    db.session.commit()
+    flash('The Detail has been remove !', 'success')
+    return redirect(url_for('expense', expense_id=expense_id))
+
+
+@app.route("/expense/<int:expense_id>")
+def expense(expense_id):
+    expense = Expense.query.get_or_404(expense_id)
+    details = expense.details
+    related_account = Account.query.get(expense.account_id)
+    expense.account_id = related_account.category + "-" + related_account.bank + "-" + related_account.iban
+    currency = numbers.get_currency_symbol(related_account.currency.split("-")[1].strip(), locale='en')
+    image_file = url_for('static', filename='expense_pics/' + expense.proof)
+    return render_template('expense.html', title="single_expense", expense=expense, image_file=image_file,  currency=currency, details=details)
+
+
+def save_picture(form_picture, folder):
+    """This function takes picture-data as argument , save the image in the filesystem and then return the random
+    name of the image """
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)  # transforms "monfichier.jpg" => "monfichier" , ".jpg"
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/'+str(folder), picture_fn)
+    i = Image.open(form_picture)
+    # output_size = (125, 125)
+    #i.thumbnail(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
+
 @app.route("/incomes")
 @login_required
 def incomes():
-    # TO-DO : get only the incomes related to the accounts of the current_user.user_id
-    incomes = Income.query.all()
+    incomes = []
+    for account in Account.query.filter_by(user_id=current_user.id).all():
+        for income in account.incomes:
+            incomes.append(income)
     for income in incomes:
         related_account = Account.query.get(income.account_id)
         income.account_id = related_account.category+"-"+related_account.bank+"-"+related_account.iban
@@ -79,8 +232,6 @@ def update_income(income_id):
         form.income_date.data = income.income_date
         form.amount.data = income.amount
         form.source.data = income.source
-        print("form account_id = ", form.account_id.data)
-        print("form category = ", form.category.data)
     return render_template('new_income.html', title='update_income', form=form, legend='Update Income')
 
 
@@ -98,7 +249,6 @@ def delete_income(income_id):
 @app.route("/accounts")
 @login_required
 def accounts():
-    # TO-DO : get only the accounts for the current_user.user_id
     accounts = Account.query.filter_by(user_id=current_user.id).all()
     for account in accounts:
         account.currency = numbers.get_currency_symbol(account.currency.split("-")[1].strip(), locale='en')
@@ -117,8 +267,8 @@ def new_account():
         if form.balance.data is None:
             balance = form.balance.data
         new_account = Account(user_id =current_user.id, category=form.category.data, owner=form.owner.data, iban=form.iban.data,
-                              bank=form.bank.data,balance=balance, expiration_date=form.expiration_date.data,
-                              currency=form.currency.data,country=form.country.data)
+                              bank=form.bank.data, balance=balance, expiration_date=form.expiration_date.data,
+                              currency=form.currency.data, country=form.country.data)
         db.session.add(new_account)
         db.session.commit()
         flash('Your new expense account has been created ! ', 'success')
@@ -137,9 +287,13 @@ def account(account_id):
 @login_required
 def delete_account(account_id):
     deleted_account = Account.query.get_or_404(account_id)
+    deleted_incomes = Income.query.filter_by(account_id=account_id).all()
     db.session.delete(deleted_account)
+    for income in deleted_incomes:
+        db.session.delete(income)
     db.session.commit()
-    flash('Your account has been successfully deleted !', 'success')
+    print(deleted_account, deleted_incomes)
+    flash('Your account and the related incomes have been successfully deleted !', 'success')
     return redirect(url_for('accounts'))
 
 
@@ -208,5 +362,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
 
 

@@ -4,4 +4,6 @@ flask_sqlalchemy
 flask_bcrypt
 flask_wtf
 email_validator
+gunicorn
 babel
+Pillow

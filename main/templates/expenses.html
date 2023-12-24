@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <script>
+          Swal.fire({
+            {% if category == 'success' %}
+              title : "Operation Succesful",
+            {% endif %}
+            position: "middle-end",
+            html: "{{message}}.",
+            icon: "{{category}}"
+          });
+        </script>
+      {% endfor %}
+    {% endif %}
+{% endwith %}
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+$(document).ready( function () {
+    $('#expenses').DataTable();
+});
+</script>
+<div class="flex items-center px-4 py-4 overflow-x-auto whitespace-nowrap">
+    <button  onclick="history.back()" type="button" class="w-full flex items-center justify-center w-1/2 px-5 py-2 mr-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+        <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+        </svg>
+        <span>Go back</span>
+    </button>
+    <a href="{{url_for('dashboard')}}" class="text-gray-600 dark:text-gray-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+        </svg>
+    </a>
+
+    <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+    </span>
+
+    <a href="{{url_for('expenses')}}" class="text-gray-600 dark:text-gray-200 hover:underline">
+        Expenses
+    </a>
+</div>
+
+<div class="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between">
+    <div class="mr-6">
+      <h1 class="dark:text-white text-4xl font-semibold mb-2">Expenses</h1>
+    </div>
+    <div class="flex flex-wrap items-start justify-end -mb-3">
+        <a href="{{url_for('new_expense')}}">
+            <button class="inline-flex px-5 py-3 text-white bg-purple-600 hover:bg-purple-700 focus:bg-purple-700 rounded-md ml-6 mb-3">
+                <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="flex-shrink-0 h-6 w-6 text-white -ml-1 mr-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Register new Expense
+            </button>
+        </a>
+    </div>
+</div>
+
+<div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+        <table id="expenses" class="w-full whitespace-no-wrap" style="width:100%">
+            <thead>
+                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Account</th>
+                    <th class="px-4 py-3">Merchant</th>
+                    <th class="px-4 py-3">Category</th>
+                    <th class="px-4 py-3">Amount</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            {% for expense in expenses %}
+            <tr class="text-gray-700 dark:text-gray-400">
+                <td class="px-4 py-3 text-sm">{{expense.expense_date}}</td>
+                <td class="px-4 py-3 text-sm">{{expense.account_id}}</td>
+                <td class="px-4 py-3 text-sm">{{expense.merchant}}</td>
+                <td class="px-4 py-3 text-sm">{{expense.category}}</td>
+                <td class="px-4 py-3 text-sm">{{expense.amount}}</td>
+                <td>
+                    <div class="flex items-center space-x-4 text-sm">
+                      <a href="{{url_for('expense',expense_id=expense.id)}}">
+                          <button class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray" aria-label="Edit">
+                              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                              </svg>
+                          </button>
+                      </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Account</th>
+                    <th class="px-4 py-3">Merchant</th>
+                    <th class="px-4 py-3">Category</th>
+                    <th class="px-4 py-3">Amount</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{% endblock main %}

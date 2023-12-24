@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+
+<!-- component -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class=" px-4 py-4 container max-w-screen-lg mx-auto ">
+    <div class="flex items-center py-4 overflow-x-auto whitespace-nowrap">
+        <button  onclick="history.back()" type="button" class="w-full flex items-center justify-center w-1/2 px-5 py-2 mr-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+            <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+            </svg>
+            <span>Go back</span>
+        </button>
+        <a href="{{url_for('accounts')}}" class="text-gray-600 dark:text-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+        </a>
+
+        <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+        </span>
+
+        <a href="{{url_for('expenses')}}" class="text-gray-600 dark:text-gray-200 hover:underline">
+            Expenses
+        </a>
+
+        <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+        </span>
+
+        <a href="{{url_for('expense', expense_id=expense.id )}}" class="text-gray-600 dark:text-gray-200 hover:underline">
+            Expense#{{expense.id}}
+        </a>
+
+        <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+        </span>
+
+        <a class="text-gray-600 dark:text-gray-200 hover:underline">
+            New expense detail
+        </a>
+
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded shadow-lg p-4 px-4 md:p-8 mb-4">
+        <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+            <div class="text-gray-700 mt-2">
+                <p class="font-medium text-lg dark:text-white">Single detail informations</p>
+                <p class="dark:text-white">Please fill out all the required fields.</p>
+            </div>
+            <div class="lg:col-span-2">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                        <div class="md:col-span-5">
+                            <span class="text-gray-700 dark:text-gray-400">Denomination</span>
+                            {{form.detail_name(class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input") }}
+                        </div>
+                        <div class="md:col-span-5">
+                            <span class="text-gray-700 dark:text-gray-400">Quantity</span>
+                            {{form.detail_quantity(class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input") }}
+                        </div>
+                        <div class="md:col-span-5">
+                            <span class="text-gray-700 dark:text-gray-400">Unit price</span>
+                            {{form.detail_amount(class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input") }}
+                        </div>
+                        <div class="md:col-span-5 text-right">
+                            <div class="inline-flex items-end">
+                              {{form.submit(class="block px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple")}}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
+

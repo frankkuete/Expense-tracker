@@ -32,15 +32,6 @@ class Income(db.Model):
     amount = db.Column(db.Float, nullable=False)
 
 
-class ExpenseAccount(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    expense_id = db.Column('expense_id', db.Integer, db.ForeignKey('expense.id'))
-    account_id = db.Column('account_id', db.Integer, db.ForeignKey('account.id'))
-    amount = db.Column(db.Float, nullable=False)
-    expense = db.relationship('Expense', back_populates='accounts', lazy=True)
-    account = db.relationship('Account', back_populates='expenses', lazy=True)
-
-
 class ExpenseDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     expense_id = db.Column('expense_id', db.Integer, db.ForeignKey('expense.id'))
@@ -61,12 +52,13 @@ class Account(db.Model):
     currency = db.Column(db.String(50), default="Euro")
     country = db.Column(db.String(50), nullable=False, default="Belgium")
     incomes = db.relationship('Income', backref='account', lazy=True)
-    expenses = db.relationship('ExpenseAccount', back_populates='account', lazy=True)
+    expenses = db.relationship('Expense', backref='account', lazy=True)
 
 
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     expense_date = db.Column(db.DateTime, default=datetime.now())
     category = db.Column(db.String(50), nullable=False)
     proof = db.Column(db.String(50), default='default.jpg')
@@ -74,7 +66,6 @@ class Expense(db.Model):
     description = db.Column(db.String(50))
     amount = db.Column(db.Float, nullable=False)
     details = db.relationship('ExpenseDetail', back_populates='expense', lazy=True)
-    accounts = db.relationship('ExpenseAccount', back_populates='expense', lazy=True)
 
 
 class Detail(db.Model):
