@@ -148,10 +148,10 @@ def expense(expense_id):
     expense = Expense.query.get_or_404(expense_id)
     details = expense.details
     related_account = Account.query.get(expense.account_id)
-    expense.account_id = related_account.category + "-" + related_account.bank + "-" + related_account.iban
+    account_name = related_account.category + "-" + related_account.bank + "-" + related_account.iban
     currency = numbers.get_currency_symbol(related_account.currency.split("-")[1].strip(), locale='en')
     image_file = url_for('static', filename='expense_pics/' + expense.proof)
-    return render_template('expense.html', title="single_expense", expense=expense, image_file=image_file,  currency=currency, details=details)
+    return render_template('expense.html', title="single_expense", expense=expense, account_name=account_name, image_file=image_file,  currency=currency, details=details)
 
 
 def save_picture(form_picture, folder):
