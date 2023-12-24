@@ -7,3 +7,4 @@ email_validator
 gunicorn
 babel
 Pillow
+psycopg2
