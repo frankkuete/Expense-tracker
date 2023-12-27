@@ -24,49 +24,71 @@ $(document).ready( function () {
     $('#incomes').DataTable();
 });
 </script>
-<div class="flex items-center px-4 py-4 overflow-x-auto whitespace-nowrap">
-    <button  onclick="history.back()" type="button" class="w-full flex items-center justify-center w-1/2 px-5 py-2 mr-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
-        <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-        </svg>
-        <span>Go back</span>
-    </button>
-    <a href="{{url_for('dashboard')}}" class="text-gray-600 dark:text-gray-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-        </svg>
-    </a>
 
-    <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+<nav aria-label="Breadcrumb" class="flex justify-center mt-4">
+  <ol class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
+    <li class="flex items-center">
+      <a href="{{url_for('dashboard')}}" class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          />
         </svg>
-    </span>
 
-    <a href="{{url_for('incomes')}}" class="text-gray-600 dark:text-gray-200 hover:underline">
+        <span class="ms-1.5 text-xs font-medium"> Home </span>
+      </a>
+    </li>
+
+    <li class="relative flex items-center">
+      <span class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
+      </span>
+
+      <a href="{{url_for('incomes')}}" class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
         Incomes
-    </a>
-</div>
+      </a>
+    </li>
+  </ol>
+</nav>
 
-<div class="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between">
-    <div class="mr-6">
-      <h1 class="dark:text-white text-4xl font-semibold mb-2">Incomes</h1>
+
+<header class=" dark:bg-black">
+  <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <div class="sm:flex sm:items-center sm:justify-between">
+      <div class="text-center sm:text-left">
+        <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">My Incomes</h1>
+        <p class="mt-1.5 text-sm text-gray-500">All your incomes are listed below! 🎉</p>
+      </div>
+
+      <div class="mt-4 flex flex-col gap-4 mt-0 flex-row items-center">
+          <a href="{{url_for('new_income')}}">
+               <button
+                  class="block rounded-lg bg-purple-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-purple-700 focus:outline-none focus:ring"
+                  type="button">
+                  Create Income
+                </button>
+          </a>
+      </div>
     </div>
-    <div class="flex flex-wrap items-start justify-end -mb-3">
-        <a href="{{url_for('new_income')}}">
-            <button class="inline-flex px-5 py-3 text-white bg-purple-600 hover:bg-purple-700 focus:bg-purple-700 rounded-md ml-6 mb-3">
-                <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="flex-shrink-0 h-6 w-6 text-white -ml-1 mr-2">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Create new Income
-            </button>
-        </a>
-    </div>
-</div>
+  </div>
+</header>
 
-
+<style>
+    #incomes_wrapper {
+        color:gray;
+        font-weight:700
+    }
+</style>
 <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
-  <div class="w-full overflow-x-auto">
+  <div class="w-full overflow-x-auto dark:bg-white">
     <table id="incomes" class="w-full whitespace-no-wrap">
       <thead>
         <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">

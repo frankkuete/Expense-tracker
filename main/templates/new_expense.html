@@ -7,45 +7,51 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <div class=" px-4 py-4 container max-w-screen-lg mx-auto ">
-    <div class="flex items-center py-4 overflow-x-auto whitespace-nowrap">
-        <button  onclick="history.back()" type="button" class="w-full flex items-center justify-center w-1/2 px-5 py-2 mr-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
-            <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+    <nav aria-label="Breadcrumb" class="flex justify-center mt-4 mb-4">
+      <ol class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
+          <li class="flex items-center">
+          <a href="{{url_for('dashboard')}}" class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
             </svg>
-            <span>Go back</span>
-        </button>
-        <a href="{{url_for('accounts')}}" class="text-gray-600 dark:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-            </svg>
-        </a>
 
-        <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-        </span>
+            <span class="ms-1.5 text-xs font-medium"> Home </span>
+          </a>
+        </li>
+          <li class="relative flex items-center">
+            <span class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
+            </span>
 
-        <a href="{{url_for('expenses')}}" class="text-gray-600 dark:text-gray-200 hover:underline">
-            Expenses
-        </a>
-
-        <span class="mx-5 text-gray-500 dark:text-gray-300 rtl:-scale-x-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-        </span>
-        {% if legend %}
-        <a href="{{url_for('new_expense')}}" class="text-blue-600 dark:text-blue-400 hover:underline">
-            Update expense
-        </a>
-        {% else %}
-        <a href="{{url_for('new_expense')}}" class="text-blue-600 dark:text-blue-400 hover:underline">
-            Create expense
-        </a>
-        {% endif %}
-    </div>
-
+            <a href="{{url_for('expenses')}}" class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
+                Expenses
+            </a>
+          </li>
+          <li class="relative flex items-center">
+            <span class="absolute inset-y-0 -start-px h-10 w-4 bg-white [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
+            </span>
+            {% if legend %}
+                <a href="#" class="flex h-10 items-center bg-gray-100 pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
+                    Update Expense
+                </a>
+                {% else %}
+                <a href="#" class="flex h-10 items-center bg-gray-100 pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
+                    Create Expense
+                </a>
+            {% endif %}
+          </li>
+      </ol>
+    </nav>
     <div class="bg-white dark:bg-gray-800 rounded shadow-lg p-4 px-4 md:p-8 mb-4">
         <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
             <div class="text-gray-700 mt-2">
