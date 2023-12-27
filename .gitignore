@@ -2,3 +2,4 @@
 env
 instance
 main/__pycache__
+startup.sh
