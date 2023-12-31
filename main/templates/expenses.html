@@ -25,9 +25,9 @@ $(document).ready( function () {
 });
 </script>
 <nav aria-label="Breadcrumb" class="flex justify-center mt-4">
-  <ol class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
+  <ol class="flex overflow-hidden rounded-lg border border-gray-300 text-gray-600">
     <li class="flex items-center">
-      <a href="{{url_for('dashboard')}}" class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900">
+      <a href="{{url_for('dashboard')}}" class="flex h-10 items-center gap-1.5 bg-gray-300 px-4 transition hover:text-gray-900">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-4 w-4"
@@ -48,7 +48,7 @@ $(document).ready( function () {
     </li>
 
     <li class="relative flex items-center">
-      <span class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
+      <span class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-300 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
       </span>
 
       <a href="{{url_for('expenses')}}" class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
@@ -82,7 +82,6 @@ $(document).ready( function () {
 <style>
     #expenses_wrapper {
         color:gray;
-        font-weight:700
     }
 </style>
 <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
@@ -98,14 +97,18 @@ $(document).ready( function () {
                     <th class="px-4 py-3">Actions</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tbody class="">
             {% for expense in expenses %}
-            <tr class="text-gray-700 dark:text-gray-400">
-                <td class="px-4 py-3 text-sm">{{expense.expense_date}}</td>
+            <tr class="text-gray-900 dark:text-gray-100">
+                <td class="px-4 py-3 text-sm">{{expense.expense_date.strftime('%d')}}/{{expense.expense_date.strftime('%m')}}/{{expense.expense_date.year}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.account_id}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.merchant}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.category}}</td>
-                <td class="px-4 py-3 text-sm">{{expense.amount}}</td>
+                <td class="px-4 py-3 text-sm">
+                    <span class="px-2 py-1 font-semibold leading-tight text-red-700 dark:text-red-100">
+                      - {{expense.amount}}
+                    </span>
+                </td>
                 <td>
                     <div class="flex items-center space-x-4 text-sm">
                       <a href="{{url_for('expense',expense_id=expense.id)}}">
