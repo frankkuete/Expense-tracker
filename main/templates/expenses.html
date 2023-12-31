@@ -100,7 +100,7 @@ $(document).ready( function () {
             <tbody class="">
             {% for expense in expenses %}
             <tr class="text-gray-900 dark:text-gray-100">
-                <td class="px-4 py-3 text-sm">{{expense.expense_date.day}}/{{expense.expense_date.month}}/{{expense.expense_date.year}}</td>
+                <td class="px-4 py-3 text-sm">{{expense.expense_date.year}}-{{expense.expense_date.strftime('%m')}}-{{expense.expense_date.strftime('%d')}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.account_id}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.merchant}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.category}}</td>
