@@ -82,16 +82,16 @@ def dashboard():
     current_year = datetime.date.today().year
     last_year = current_year - 1
 
-    expensepercat = db.session.query(Expense.category, func.sum(Expense.amount).label('total')).group_by(Expense.category) .all()
-    expenseCat =[]
+    expensepercat = db.session.query(Expense.category, func.sum(Expense.amount).label('total')).group_by(
+        Expense.category).all()
+    expenseCat = []
     expenseCatAmount = []
     for cat in expensepercat:
         expenseCat.append(cat[0])
         expenseCatAmount.append(cat[1])
 
-
     currentyear_in_per_month = json.dumps(income_per_month(income_per_year(incomes, current_year)[0]))
-    currentyear_ex_per_month = json.dumps(income_per_month(expense_per_year(expenses, current_year)[0]))
+    currentyear_ex_per_month = json.dumps(expense_per_month(expense_per_year(expenses, current_year)[0]))
 
     return render_template('dashboard.html', title="dashboard", cy=current_year,
                            currentyear_in_per_month=currentyear_in_per_month,
