@@ -121,7 +121,7 @@
       <!-- Pie chart -->
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-          Incomes distribution in {{cy}} per category.
+          Expense distribution in {{cy}} per category.
         </h4>
         <canvas id="ipc"></canvas>
       </div>
@@ -163,7 +163,7 @@ const barConfig2 = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],
     datasets: [
       {
-        label: 'Income per Month',
+        label: 'Expense per Month',
         backgroundColor: '#0694a2',
         borderWidth: 2,
         data: JSON.parse({{ currentyear_ex_per_month | tojson }}),
@@ -184,7 +184,7 @@ const barConfig3 = {
     labels:JSON.parse({{ expenseCat | tojson }}),
     datasets: [
       {
-        label: 'Income per Month',
+        label: 'Expenditure per category',
         borderWidth: 2,
         data:JSON.parse({{ expenseCatAmount | tojson }}),
       }
