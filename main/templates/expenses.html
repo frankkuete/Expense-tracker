@@ -59,19 +59,19 @@ $(document).ready( function () {
 </nav>
 
 <header>
-  <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+  <div class="mx-auto max-w-screen-xl px-2 py-8">
     <div class="sm:flex sm:items-center sm:justify-between">
       <div class="text-center sm:text-left">
-        <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">My Expenses</h1>
-        <p class="mt-1.5 text-sm text-gray-500">All your expense are listed below! 🎉</p>
+        <h1 class="text-2xl font-bold text-gray-700 sm:text-3xl dark:text-white">My Expenses</h1>
       </div>
 
       <div class="mt-4 flex flex-col gap-4 mt-0 flex-row items-center">
           <a  href="{{url_for('new_expense')}}">
-               <button
-                  class="block rounded-lg bg-purple-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-purple-700 focus:outline-none focus:ring"
-                  type="button">
-                  Create Expense
+                <button class="flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg class="w-4 h-4 mr-4 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.546.5a9.5 9.5 0 1 0 9.5 9.5 9.51 9.51 0 0 0-9.5-9.5ZM13.788 11h-3.242v3.242a1 1 0 1 1-2 0V11H5.304a1 1 0 0 1 0-2h3.242V5.758a1 1 0 0 1 2 0V9h3.242a1 1 0 1 1 0 2Z"/>
+                    </svg>
+                  <span> Create Expense</span>
                 </button>
           </a>
       </div>
@@ -89,10 +89,10 @@ $(document).ready( function () {
         <table id="expenses" class="w-full whitespace-no-wrap" style="width:100%">
             <thead>
                 <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                    <th class="px-4 py-3">Date</th>
-                    <th class="px-4 py-3">Account</th>
                     <th class="px-4 py-3">Merchant</th>
                     <th class="px-4 py-3">Category</th>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Account</th>
                     <th class="px-4 py-3">Amount</th>
                     <th class="px-4 py-3">Actions</th>
                 </tr>
@@ -100,12 +100,22 @@ $(document).ready( function () {
             <tbody class="">
             {% for expense in expenses %}
             <tr class="text-gray-900 dark:text-gray-100">
-                <td class="px-4 py-3 text-sm">{{expense.expense_date.year}}-{{expense.expense_date.strftime('%m')}}-{{expense.expense_date.strftime('%d')}}</td>
-                <td class="px-4 py-3 text-sm">{{expense.account_id}}</td>
-                <td class="px-4 py-3 text-sm">{{expense.merchant}}</td>
+                <td class="px-4 py-3 font-bold  text-sm">{{expense.merchant}}</td>
                 <td class="px-4 py-3 text-sm">{{expense.category}}</td>
-                <td class="px-4 py-3 text-sm">
-                    <p class="text-medium font-semibold  text-red-700 dark:text-red-800"> - € {{expense.amount}}</p>
+                <td class="px-4 py-3 text-sm">{{expense.expense_date.strftime('%b')}}. {{expense.expense_date.strftime('%d')}}, {{expense.expense_date.year}}</td>
+                <td class="px-4 py-3 text-xs">
+                    {% if "Compte courant" in expense.account_id %}
+                      <span class="px-2 py-1  leading-tight text-purple-700 bg-purple-100 rounded-full dark:bg-purple-700 dark:text-purple-100">
+                      {{expense.account_id}}
+                      </span>
+                    {% else %}
+                      <span class="px-2 py-1  leading-tight text-yellow-700 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-yellow-100">
+                      {{expense.account_id}}
+                      </span>
+                     {% endif %}
+                </td>
+                <td class="px-4 py-3 font-bold  text-sm">
+                    <p class="text-medium text-red-700 dark:text-red-800"> -{{expense.amount}}€ </p>
                 </td>
                 <td>
                     <div class="flex items-center space-x-4 text-sm">
@@ -123,10 +133,10 @@ $(document).ready( function () {
             </tbody>
             <tfoot>
                 <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                    <th class="px-4 py-3">Date</th>
-                    <th class="px-4 py-3">Account</th>
                     <th class="px-4 py-3">Merchant</th>
                     <th class="px-4 py-3">Category</th>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Account</th>
                     <th class="px-4 py-3">Amount</th>
                     <th class="px-4 py-3">Actions</th>
                 </tr>

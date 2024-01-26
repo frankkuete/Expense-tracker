@@ -35,8 +35,7 @@ class CreateAccountForm(FlaskForm):
                   ('Swiss Franc - CHF', 'Swiss Franc'), ('British Pound - GBP', 'British Pound'),
                   ('Canadian dollar - CAD', 'Canadian dollar'),
                   ('Japanese yen - JPY', 'Japanese yen')]
-    account_cats = [('Chèque-repas', 'Chèque-repas'), ('Eco-chèques', 'Eco-chèques'),
-                    ('Compte épargne', 'Compte épargne'), ('Compte courant', 'Compte courant')]
+    account_cats = [('Compte épargne', 'Compte épargne - Saving account'), ('Compte courant', 'Compte courant - Current account')]
     category = SelectField('Category of expense account', choices=account_cats, validators=[DataRequired()])
     owner = StringField('Owner', validators=[DataRequired(), Length(min=2, max=50)])
     iban = StringField('IBAN', validators=[DataRequired()])
@@ -69,7 +68,7 @@ class CreateDetailForm(FlaskForm):
 
 
 class CreateExpenseForm(FlaskForm):
-    categories = [('Mortgage or rent', 'Housing-Mortgage or rent'), ('Property taxes', 'Housing-Mortgage or rent'),
+    categories = [('Mortgage or rent', 'Housing-Mortgage or rent'),
                   ('Household repairs', 'Housing-Household repairs'),('Car payment', 'Transportation-Car payment'),
                   ('Car warranty', 'Transportation-Car warranty'), ('Gas', 'Transportation-Gas'),
                   ('Tires', 'Transportation-Tires'), ('Repairs', 'Transportation-Repairs'),
@@ -99,4 +98,3 @@ class CreateExpenseForm(FlaskForm):
     description = TextAreaField('expense description')
     amount = FloatField('Expense Amount ', validators=[DataRequired()])
     submit = SubmitField('Submit')
-

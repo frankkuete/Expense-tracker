@@ -2,7 +2,204 @@
 
 
 {% block main %}
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<header>
+  <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-8 lg:px-8">
+    <div class="sm:flex sm:items-center sm:justify-between">
+      <div class="text-center sm:text-left">
+        <h1 class="text-2xl font-bold text-gray-700 sm:text-3xl dark:text-white">Dashboard</h1>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3">
+      <!-- Card -->
+      <div class="flex items-center p-4 bg-gray-100 rounded-lg shadow-xs dark:bg-gray-700">
+        <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+          <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 font-dm text-sm font-medium text-gray-700 dark:text-gray-100">
+            Total balance
+          </p>
+          {% if total_balance > 0 %}
+          <p class="text-2xl font-bold text-green-700 dark:text-green-200">
+             € {{"{:,}".format(total_balance)}}
+          </p>
+          {% else %}
+          <p class="text-2xl font-bold text-red-700 dark:text-red-200">
+            € {{"{:,}".format(total_balance)}}
+          </p>
+          {%endif%}
+          <p class="text-xs text-center mt-2 font-bold p-2 text-green-700 bg-green-200 rounded-full dark:text-green-200">
+            Total balance estimated in all currencies
+          </p>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="flex items-center p-4 bg-gray-100 rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+          <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0h8m-8 0-1-4m9 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-9-4h10l2-7H3m2 7L3 4m0 0-.792-3H1"/>
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 font-dm text-sm font-medium text-gray-700 dark:text-gray-100">
+            Total Expenses
+          </p>
+          {% if total_expense > 0 %}
+          <p class="text-2xl font-bold text-green-700 dark:text-green-200">
+             € {{"{:,}".format(total_expense)}}
+          </p>
+          {% else %}
+          <p class="text-2xl font-bold text-red-700 dark:text-red-200">
+            € {{"{:,}".format(total_expense)}}
+          </p>
+          {%endif%}
+          <p class="text-xs text-center mt-2 font-bold p-2 text-green-700 bg-green-200 rounded-full dark:text-green-200">
+            Total expenditures in {{cy}}
+          </p>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="flex items-center p-4 bg-gray-100 rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+          <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.905 1.316 15.633 6M18 10h-5a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h5m0-5a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1m0-5V7a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1v-3m-6.367-9L7.905 1.316 2.352 6h9.281Z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 font-dm text-sm font-medium text-gray-700 dark:text-gray-100">
+            Total incomes
+          </p>
+          {% if total_income > 0 %}
+          <p class="text-2xl font-bold text-green-700 dark:text-green-200">
+             € {{"{:,}".format(total_income)}}
+          </p>
+          {% else %}
+          <p class="text-2xl font-bold text-red-700 dark:text-red-200">
+            € {{"{:,}".format(total_income)}}
+          </p>
+          {%endif%}
+          <p class="text-xs text-center mt-2 font-bold p-2 text-green-700 bg-green-200 rounded-full dark:text-green-200">
+            Total earnings in {{cy}}
+          </p>
+        </div>
+      </div>
+</div>
+
+<header>
+      <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-8 lg:px-8">
+        <div class="sm:flex sm:items-center sm:justify-between">
+          <div class="text-center sm:text-left">
+            <h1 class="text-2xl font-bold text-gray-700 sm:text-3xl dark:text-white">Statistics</h1>
+          </div>
+        </div>
+      </div>
+</header>
+
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <div class="grid gap-6 mb-8 md:grid-cols-1 lg:grid-cols-2">
+      <!-- Bars chart -->
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+          Earnings in {{cy}} per month.
+        </h4>
+        <canvas id="ipm"></canvas>
+        <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+          Expenditures in {{cy}} per month.
+        </h4>
+        <canvas id="epm"></canvas>
+      </div>
+
+      <!-- Pie chart -->
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+          Incomes distribution in {{cy}} per category.
+        </h4>
+        <canvas id="ipc"></canvas>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+
+const earningPerMonthCtx = document.getElementById('ipm')
+const expensePerMonthCtx = document.getElementById('epm')
+const incomepercatCtx = document.getElementById('ipc')
+
+const barConfig = {
+  type: 'bar',
+  data: {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],
+    datasets: [
+      {
+        label: 'Income per Month',
+        backgroundColor: '#0694a2',
+        borderWidth: 2,
+        data: JSON.parse({{ currentyear_in_per_month | tojson }}),
+      }
+    ],
+  },
+  options: {
+    responsive: true,
+    legend: {
+      display: false,
+    },
+  },
+}
+
+const barConfig2 = {
+  type: 'bar',
+  data: {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],
+    datasets: [
+      {
+        label: 'Income per Month',
+        backgroundColor: '#0694a2',
+        borderWidth: 2,
+        data: JSON.parse({{ currentyear_ex_per_month | tojson }}),
+      }
+    ],
+  },
+  options: {
+    responsive: true,
+    legend: {
+      display: false,
+    },
+  },
+}
+
+const barConfig3 = {
+  type: 'pie',
+  data: {
+    labels:JSON.parse({{ expenseCat | tojson }}),
+    datasets: [
+      {
+        label: 'Income per Month',
+        borderWidth: 2,
+        data:JSON.parse({{ expenseCatAmount | tojson }}),
+      }
+    ],
+  },
+  options: {
+
+  },
+}
+new Chart(earningPerMonthCtx, barConfig)
+new Chart(expensePerMonthCtx, barConfig2)
+new Chart(incomepercatCtx, barConfig3)
+
+
+</script>
 
 {% endblock main %}
 
